@@ -8,41 +8,59 @@ class Dishdetail extends Component {
           
         }
     }
-        
-    render(){
-        const detail=this.props.dishdetail;
-        const com=this.props.dishdetail.comments.map((comment)=> {
-            return(
-                <div key={comment.id}> 
-                 <p>
-                   <br/><span>{comment.comment}</span>
-                   <br/><span>--{comment.author}, {(new Date(comment.date)).toLocaleDateString()}</span>
-                </p>
-                </div>
-            );
-        });
-    return(
-     <div className="container">
-       <div className="row">
-          <div className="col-12 col-md-5 m-1">
+    
+    renderDish(dish){
+       const detail=dish;
+        return(
+            <div className="col-12 col-md-5 m-1">
                 <Card key={detail.id}>
-                    <CardImg  width="100%" src={detail.image} alt={detail.name} />
+                  <CardImg  width="100%" src={detail.image} alt={detail.name} />
                     <CardBody>
                       <CardTitle>{detail.name}</CardTitle>
                       <CardText>{detail.description}</CardText>
                     </CardBody>
                 </Card>
           </div>
-        
-          <div className="col-12 col-md-5 m-1">
+        );
+    }
+    
+    renderComments(dish){
+        const com=dish.comments.map((comment)=> {
+            return(
+                <div key={comment.id}> 
+                 <p>
+                   <br/><span>{comment.comment}</span>
+                   <br/><span>--{comment.author}, {new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'short', day: '2-digit'}).format(new Date(Date.parse(comment.date)))}</span>
+                </p>
+                </div>
+            );
+        });
+           return(
+            <div className="col-12 col-md-5 m-1">
               <h3>Comments</h3>
                {com}
-          </div> 
-        
-      </div>
-    </div>
-                   
+            </div> 
+           );
+    }
+   
+    render(){
+        if(this.props.dish!=null){
+            const dishrender=this.renderDish(this.props.dish);
+            const commnetrender=this.renderComments(this.props.dish);
+            return(
+                <div className="container">
+                  <div className="row">
+                     {dishrender}
+                     {commnetrender}
+                  </div>
+               </div> 
             );
+        }
+        else
+            return(
+                <div></div>
+        );
+    
     }
 }
 export default Dishdetail;
