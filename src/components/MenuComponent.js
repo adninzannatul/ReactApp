@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import Dishdetail from './DishdetailComponent';
 import { Card, CardImg, CardImgOverlay, CardTitle, CardText, CardBody } from 'reactstrap';
 
 class Menu extends Component {
@@ -10,19 +11,14 @@ class Menu extends Component {
     }
     
     onDishSelect(dish) {
-        this.setState({selectedDish: dish});
+        this.setState({selectedDish: dish}); 
+         
     }
     
     renderDish(dish){
         if(dish!=null){
              return(
-                <Card>
-                    <CardImg top src={dish.image} alt={dish.name} />
-                    <CardBody>
-                      <CardTitle>{dish.name}</CardTitle>
-                      <CardText>{dish.description}</CardText>
-                    </CardBody>
-                </Card>
+                 <Dishdetail dishdetail={this.state.selectedDish}/> 
             );
         }
         else
@@ -50,10 +46,8 @@ class Menu extends Component {
             <div className="row">
                   {menu}
             </div>
-            <div className="row">
-                  <div className="col-12 col-md-5 m-1">
-                    {this.renderDish(this.state.selectedDish)}
-                  </div>
+             <div className="row">
+                {this.renderDish(this.state.selectedDish)}
             </div>
           </div>
         );
