@@ -1,7 +1,7 @@
 import React from 'react';
 import { Card, CardImg, CardImgOverlay,CardBody, CardTitle } from 'reactstrap';
 
-function About({dish}){
+function AboutUs({dish}){
     
     return(    
                <div>
@@ -16,12 +16,12 @@ function About({dish}){
    
 }
 
-const AboutUs= (props) => {
+const About= (props) => {
     const aboutDish=props.dishes.map(dish => {
         return(
         
          <div className="col-12 col-md-2 m-1">
-           <About dish={dish}/>
+           <AboutUs dish={dish}/>
          </div>
        
             );
@@ -36,4 +36,4 @@ const AboutUs= (props) => {
     );
 } 
 
-export default AboutUs;
+export default About;
