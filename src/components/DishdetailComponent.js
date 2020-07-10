@@ -1,5 +1,6 @@
 import React from 'react';
-import { Card, CardImg, CardImgOverlay, CardTitle, CardText, CardBody } from 'reactstrap';
+import { Link } from 'react-router-dom';
+import { Card, CardImg, CardImgOverlay, CardTitle, CardText, CardBody, Breadcrumb, BreadcrumbItem } from 'reactstrap';
 
     
     function RenderDish({dish}){
@@ -17,8 +18,8 @@ import { Card, CardImg, CardImgOverlay, CardTitle, CardText, CardBody } from 're
         );
     }
     
-    function RenderComments({dish}){
-        const com=dish.comments.map((comment)=> {
+    function RenderComments({comments}){
+        const com=comments.map((comment)=> {
             return(
                 <div key={comment.id}> 
                  <p>
@@ -40,9 +41,19 @@ import { Card, CardImg, CardImgOverlay, CardTitle, CardText, CardBody } from 're
         if(props.dish!=null){
             return(
                 <div className="container">
+                 <div className="row">
+                    <Breadcrumb>
+                        <BreadcrumbItem><Link to="/menu">Menu</Link></BreadcrumbItem>
+                        <BreadcrumbItem active>{props.dish.name}</BreadcrumbItem>
+                    </Breadcrumb>
+                    <div className="col-12">
+                        <h3>{props.dish.name}</h3>
+                        <hr />
+                    </div>                
+                </div>
                   <div className="row">
                      <RenderDish dish={props.dish}/>
-                     <RenderComments dish={props.dish}/>
+                     <RenderComments comments={props.comments}/>
                   </div>
                </div> 
             );
