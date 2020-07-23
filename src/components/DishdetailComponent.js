@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { Card, CardImg, CardImgOverlay, CardTitle, CardText, CardBody, Breadcrumb, BreadcrumbItem, Nav, NavItem, Jumbotron, Button, Modal, ModalHeader, ModalBody,
 Input, Label, Row, Col } from 'reactstrap';
 import { Control, LocalForm, Errors } from 'react-redux-form';
+import { Loading } from './LoadingComponent';
 
 
 const required = (val) => val && val.length;
@@ -16,7 +17,7 @@ class CommentForm extends Component{
             isModalOpen: false
         }
         this.toggleModal=this.toggleModal.bind(this);
-        this.handleModal=this.handleModal.bind(this);
+        this.handleSubmit=this.handleSubmit.bind(this);
     }
     
      toggleModal() {
@@ -25,15 +26,9 @@ class CommentForm extends Component{
         });
       }
     
-     handleModal(event) {
-        this.toggleModal();
-        alert("Rating: " + this.ratings.value + " Name: " + this.name.value
-            + " Comment: " + this.comment.checked);
-
-      }
-    
     handleSubmit(values) {
-        alert('Current State is: ' + JSON.stringify(values));     
+        this.toggleModal();
+        this.props.addComment(this.props.dishId, values.rating, values.name, values.comment);    
       }       
     
    
@@ -50,9 +45,9 @@ class CommentForm extends Component{
                     <ModalBody>
                          <LocalForm onSubmit={(values) => this.handleSubmit(values)}>
                             <Row className="form-group">
-                                <Label htmlFor="ratings" md={12}>Rating</Label>
+                                <Label htmlFor="rating" md={12}>Rating</Label>
                                 <Col md={12}>
-                                    <Control.select model=".ratings" name="ratings"
+                                    <Control.select model=".rating" name="rating"
                                         className="form-control">
                                         <option>1</option>
                                         <option>2</option>
@@ -123,7 +118,7 @@ function RenderDish({dish}){
         );
     }
     
-    function RenderComments({comments}){
+    function RenderComments({comments, addComment, dishId}){
         const com=comments.map((comment)=> {
             return(
                 <div key={comment.id}> 
@@ -138,12 +133,30 @@ function RenderDish({dish}){
             <div className="col-12 col-md-5 m-1">
               <h3>Comments</h3>
                {com}
-               <CommentForm/>
+               <CommentForm dishId={dishId} addComment={addComment}/>
             </div> 
            );
     }
   const Dishdetail=(props)=>{
-      if(props.dish!=null){
+      if (props.isLoading) {
+            return(
+                <div className="container">
+                    <div className="row">            
+                        <Loading />
+                    </div>
+                </div>
+            );
+        }
+        else if (props.errMess) {
+            return(
+                <div className="container">
+                    <div className="row">            
+                        <h4>{props.errMess}</h4>
+                    </div>
+                </div>
+            );
+        }
+      else if(props.dish!=null){
         return(   
               <div className="container">
                  <div className="row">
@@ -158,10 +171,17 @@ function RenderDish({dish}){
                 </div>
                   <div className="row">
                      <RenderDish dish={props.dish}/>
-                     <RenderComments comments={props.comments}/>
+                     <RenderComments comments={props.comments}
+                      addComment={props.addComment}
+                      dishId={props.dish.id}/>
                   </div>
                </div> 
         );
+      }
+      else{
+          return(
+            <div></div>
+          );
       }
 }
 
