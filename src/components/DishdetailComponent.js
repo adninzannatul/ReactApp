@@ -5,6 +5,7 @@ Input, Label, Row, Col } from 'reactstrap';
 import { Control, LocalForm, Errors } from 'react-redux-form';
 import { Loading } from './LoadingComponent';
 import { baseUrl } from '../shared/baseUrl';
+import { FadeTransform, Fade, Stagger } from 'react-animation-components';
 
 const required = (val) => val && val.length;
 const maxLength = (len) => (val) => !(val) || (val.length <= len);
@@ -107,6 +108,11 @@ function RenderDish({dish}){
        
         return(
             <div className="col-12 col-md-5 m-1">
+              <FadeTransform
+                in
+                transformProps={{
+                    exitTransform: 'scale(0.5) translateY(-50%)'
+                }}>
                 <Card key={dish.id}>
                   <CardImg  width="100%" src={baseUrl+dish.image} alt={dish.name} />
                     <CardBody>
@@ -114,25 +120,31 @@ function RenderDish({dish}){
                       <CardText>{dish.description}</CardText>
                     </CardBody>
                 </Card>
+            </FadeTransform>
           </div>
         );
     }
     
     function RenderComments({comments, postComment, dishId}){
         const com=comments.map((comment)=> {
-            return(
+            return( 
+                <Fade in>
                 <div key={comment.id}> 
                  <p>
                    <br/><span>{comment.comment}</span>
                    <br/><span>--{comment.author}, {new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'short', day: '2-digit'}).format(new Date(Date.parse(comment.date)))}</span>
                 </p>
                 </div>
+              </Fade>
+            
             );
         });
            return(
             <div className="col-12 col-md-5 m-1">
               <h3>Comments</h3>
-               {com}
+                <Stagger in>
+                  {com}
+                 </Stagger>
                <CommentForm dishId={dishId} postComment={postComment}/>
             </div> 
            );
