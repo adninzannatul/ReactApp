@@ -1,13 +1,21 @@
 import React from 'react';
 import { Breadcrumb, BreadcrumbItem, Card, CardBody, CardHeader, Media } from 'reactstrap';
 import { Link } from 'react-router-dom';
+import { baseUrl } from '../shared/baseUrl';
+import { Loading } from './LoadingComponent';
+import { FadeTransform, Fade, Stagger } from 'react-animation-components';
 
 function RenderLeader({leader}){
     return(
         <div key={leader.id}>
+        <FadeTransform
+                in
+                transformProps={{
+                    exitTransform: 'scale(0.5) translateY(-50%)'
+                }}>
          <Media>
           <Media left middle>
-                <Media object src={leader.image} alt={leader.name} />
+                <Media object src={baseUrl+ leader.image} alt={leader.name} />
           </Media>
           <Media body className="ml-5">
              <Media heading>{leader.name}</Media>
@@ -17,6 +25,7 @@ function RenderLeader({leader}){
              </p>
           </Media>
         </Media>
+        </FadeTransform>
      </div>
     );
 }
@@ -24,18 +33,40 @@ function RenderLeader({leader}){
 
 function About(props) {
 
-    const leaders = props.leaders.map((leader) => {
-        return (
+    const leaders = props.leaders.leaders.map((leader) => {
+        return ( 
+            <Fade in>
             <div key={leader.id}>
-                    <RenderLeader leader={leader} />
-                </div>
+                    <RenderLeader leader={leader}/>
+            </div>
+            </Fade>
         );
     });
     
-
-    return(
-        <div className="container">
-            <div className="row">
+    if (props.leaders.isLoading) {
+            return(
+                <div className="container">
+                    <div className="row">            
+                        <Loading />
+                    </div>
+                </div>
+            );
+        }
+        else if (props.leaders.errMess) {
+            return(
+                <div className="container">
+                    <div className="row"> 
+                        <div className="col-12">
+                            <h4>{props.leaders.errMess}</h4>
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+        else
+         return(
+          <div className="container">
+             <div className="row">
                 <Breadcrumb>
                     <BreadcrumbItem><Link to="/home">Home</Link></BreadcrumbItem>
                     <BreadcrumbItem active>About Us</BreadcrumbItem>
@@ -45,7 +76,7 @@ function About(props) {
                     <hr />
                 </div>                
             </div>
-            <div className="row row-content">
+             <div className="row row-content">
                 <div className="col-12 col-md-6">
                     <h2>Our History</h2>
                     <p>Started in 2010, Ristorante con Fusion quickly established itself as a culinary icon par excellence in Hong Kong. With its unique brand of world fusion cuisine that can be found nowhere else, it enjoys patronage from the A-list clientele in Hong Kong.  Featuring four of the best three-star Michelin chefs in the world, you never know what will arrive on your plate the next time you visit us.</p>
@@ -89,7 +120,9 @@ function About(props) {
                 </div>
                 <div className="col-12">
                     <Media list>
+                      <Stagger in>
                         {leaders}
+                       </Stagger>
                     </Media>
                 </div>
             </div>
